@@ -1,7 +1,7 @@
 # Demo Mobile-APP
     
-# Check connect adb
+#Check connect adb
 - adb devices
 
-# Build app
+#Build app
 - yarn android
