@@ -5,186 +5,171 @@ import { color } from "@rneui/themed/dist/config";
 
 
 export default function Index(props) {
-  const [hidePass, setHidePass] = useState(true);
-  return (
+    const [hidePass, setHidePass] = useState(true);
 
-    <View style={styles.container}>
-      <View >
-        <Text style={{ fontSize: 40, textAlign: "center", paddingBottom: 40, color: '#fff' }}>Register Now!</Text>
-      </View>
-      <View style={styles.form}>
-        <Icon reverse name="person" size={50} color="#0089e3" />
-        <View style={styles.inout}>
-          <View style={styles.container_input}>
-            <View style={styles.box_input}>
-              <Icon style={styles.icon} name="person" color="#0089e3" />
-              <TextInput style={styles.input_value} placeholder="User name" />
-            </View>
+    return (
+        <View style={styles.container}>
+            <View style={styles.form}>
+                <Icon reverse name="person" size={50} color="#0089e3" />
+                <View style={styles.container_input}>
+                    <View style={styles.box_input}>
+                        <Icon style={styles.icon} name="person" color="#0089e3" />
+                        <TextInput style={styles.input_value} placeholder="User name" />
+                    </View>
 
-            <View style={styles.box_input}>
-              <View style={{
-                  flexDirection: 'row'
-              }}>
-                <Icon style={styles.icon} name="lock" color="#0089e3" />
-                <TextInput style={styles.input_value_ps} placeholder="Password"
-                  autoCompleteType="password"
-                  secureTextEntry={hidePass ? true : false} />
+                    <View style={styles.box_input}>
+                        <View style={{
+                            flexDirection: 'row'
+                        }}>
+                            <Icon style={styles.icon} name="lock" color="#0089e3" />
+                            <TextInput style={styles.input_value_ps} placeholder="Password"
+                                autoCompleteType="password"
+                                secureTextEntry={hidePass ? true : false} />
 
-                <Icon style={{marginTop: 25}} name={hidePass ? 'eye-slash' : 'eye'}
-                  type="font-awesome-5"
-                  size={15}
-                  color="#000"
-                  onPress={() => setHidePass(!hidePass)}
+                            <Icon style={{ marginTop: 25 }} name={hidePass ? 'eye-slash' : 'eye'}
+                                type="font-awesome-5"
+                                size={15}
+                                color="#000"
+                                onPress={() => setHidePass(!hidePass)}
 
-                />
+                            />
 
-              </View>
+                        </View>
 
-            </View>
+                    </View>
 
-            <View style={{ marginTop: 20 }}>
-              <Button
-                title="Log in"
-                loading={false}
-                loadingProps={{ size: "small", color: "white" }}
-                buttonStyle={{
-                  backgroundColor: "#019386",
-                  borderRadius: 10
-                }}
-                titleStyle={{ fontWeight: "bold", fontSize: 23 }}
-                containerStyle={{
-                  marginHorizontal: 50,
-                  height: 50,
-                  width: 340,
-                  marginVertical: 10,
-                }}
-                onPress={props.login}
-              />
+                    <View style={{ marginTop: 20 }}>
+                        <Button
+                            title="Log in"
+                            loading={false}
+                            loadingProps={{ size: "small", color: "white" }}
+                            buttonStyle={{
+                                backgroundColor: "#019386",
+                                borderRadius: 10
+                            }}
+                            titleStyle={{ fontWeight: "bold", fontSize: 23 }}
+                            containerStyle={{
+                                marginHorizontal: 50,
+                                height: 50,
+                                width: 340,
+                                marginVertical: 10,
+                            }}
+                            onPress={props.login}
+                        />
 
-              <Button
-                title="Sign up"
-                loading={false}
-                loadingProps={{ size: "small", color: "white" }}
-                buttonStyle={{
-                  backgroundColor: "#019386",
-                  borderRadius: 10,
-                }}
-                titleStyle={{ fontWeight: "bold", fontSize: 23 }}
-                containerStyle={{
-                  marginHorizontal: 50,
-                  height: 50,
-                  width: 340,
-                  marginVertical: 10,
-                }}
-              // onPress={() =>
-              />
-            </View>
+                        <Button
+                            title="Sign up"
+                            loading={false}
+                            loadingProps={{ size: "small", color: "white" }}
+                            buttonStyle={{
+                                backgroundColor: "#019386",
+                                borderRadius: 10,
+                            }}
+                            titleStyle={{ fontWeight: "bold", fontSize: 23 }}
+                            containerStyle={{
+                                marginHorizontal: 50,
+                                height: 50,
+                                width: 340,
+                                marginVertical: 10,
+                            }}
+                        // onPress={() =>
+                        />
+                    </View>
 
-            <View >
-              <View>
-                <Text style={{ textAlign: 'center', paddingTop: 10 }}>Or Sign Up Using</Text>
-              </View>
-              <View style={styles.icon_ftg} >
-                <Icon name="facebook" type="font-awesome-5" size={40} color='#3f5993' />
-                <Icon name="twitter" type="font-awesome-5" size={40} color='#49a1ed' />
-                <Icon name="google-plus" type="font-awesome-5" size={40} color='#d4503d' />
-              </View>
+                    <View >
+                        <View>
+                            <Text style={{ textAlign: 'center', paddingTop: 10 }}>Or Sign Up Using</Text>
+                        </View>
+                        <View style={styles.icon_ftg} >
+                            <Icon style={styles.icon_ftg} name="facebook" type="font-awesome-5" size={40} color='#3f5993' />
+                            <Icon style={styles.icon_ftg} name="twitter" type="font-awesome-5" size={40} color='#49a1ed' />
+                            <Icon style={styles.icon_ftg}name="google-plus" type="font-awesome-5" size={40} color='#d4503d' />
+                        </View>
+                    </View>
+                </View>
 
             </View>
-
-          </View>
         </View>
-      </View>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#019386",
-    height: "100%",
-    display: "flex",
-    justifyContent: "flex-end",
-  },
+    container: {
+        backgroundColor: "#019386",
+        height: "100%",
+        display: "flex",
+        justifyContent: "flex-end",
+    },
 
-  baseText: {
-    fontWeight: "bold",
-    fontSize: 40,
-    textAlign: "center",
-    justifyContent: "center",
-  },
+    baseText: {
+        fontWeight: "bold",
+        fontSize: 40,
+        textAlign: "center",
+        justifyContent: "center",
+    },
 
-  form: {
-    backgroundColor: "#fff",
-    width: "100%",
-    maxWidth: 700,
-    height: "70%",
-    borderTopStartRadius: 30,
-    borderTopEndRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  icon: {
-    marginTop: 20,
-    marginRight: 0,
-    width: 30,
-  },
+    form: {
+        backgroundColor: "#fff",
+        width: "100%",
+        maxWidth: 700,
+        height: "90%",
+        borderTopStartRadius: 30,
+        borderTopEndRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    icon: {
+        marginTop: 20,
+        marginRight: 0,
+        width: 30,
+    },
 
-  container_input: {
-    alignItems: "center",
-  },
+    container_input: {
+        alignItems: "center",
+    },
 
-  box_input: {
-    flexDirection: "row",
-    height: 50,
-    borderBottomWidth: 1,
-    width: 340,
-  },
+    box_input: {
+        flexDirection: "row",
+        height: 50,
+        borderBottomWidth: 1,
+        width: 340,
+    },
 
-  input: {
-    height: 50,
-    margin: 12,
-    padding: 10,
-  },
+    input: {
+        height: 50,
+        margin: 12,
+        padding: 10,
+    },
 
-  input_value: {
-    marginTop: 20,
-    marginRight: 0,
-    width: 320,
-    
-  },
+    input_value: {
+        marginTop: 20,
+        marginRight: 0,
+        width: 320,
 
-  input_value_ps: {
-    marginTop: 20,
-    marginRight: 0,
-    width: 290,
+    },
 
-  },
+    input_value_ps: {
+        marginTop: 20,
+        marginRight: 0,
+        width: 290,
 
-  headings: {
-    fontSize: 20,
-    fontWeight: "bold",
+    },
 
-    color: "mediumslateblue",
+    headings: {
+        fontSize: 20,
+        fontWeight: "bold",
 
-    textAlign: "center",
-    justifyContent: "center",
-  },
+        color: "mediumslateblue",
 
-  icon_ftg: {
-    flexDirection: 'row',
-    marginTop: 30,
-    justifyContent: 'space-around',
-    
-  },
+        textAlign: "center",
+        justifyContent: "center",
+    },
 
-  box: {
-    width: 100,
-    height: 100,
+    icon_ftg: {
+        margin:10,
+        padding:10,
+        flexDirection: 'row',
 
-    marginTop: 50,
-
-    backgroundColor: "deepskyblue",
-    alignSelf: "center",
-  },
+    },
+   
 });
