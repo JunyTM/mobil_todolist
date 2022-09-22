@@ -1,13 +1,13 @@
 import React from "react";
 import {useState} from "react";
 import { View, StyleSheet, Alert ,Text, TextInput, ScrollView} from "react-native";
-import Todo from "../../Todo"
+import Todo from "./Todo"
 import { Button,Icon } from "@rneui/themed";
 export default function ListTodo(props) {
   
  const [listTodo,setListTodo] = useState(props.ListTodo); 
 
- const [isChecking,setIsChecking] = useState(false) 
+
 
  const styles = StyleSheet.create({
         container: {
@@ -31,17 +31,17 @@ export default function ListTodo(props) {
   
 
   return (
-
-    <>
+    <>  
         <ScrollView style={styles.container}>
            <View style={styles.row}>
           {listTodo.map((value,key)=>{
-            return <Todo style={styles.todo}  todo={value} key = {key}  i = {key} isChecking={isChecking} openChecking={()=>setIsChecking(true)} />
+            return <Todo style={styles.todo} todo={value} key={key}  i = {value.Title+key} isChecking={props.isChecking}
+             openChecking={()=>props.openChecking()} openTodoDetails={()=>props.openTodoDetails(value)}
+             handleOnPessChecked = {(id)=>{props.handleOnPessChecked(id)}} includeChecked={(id)=>props.includeChecked(id)}
+             />
         })}
          </View>
         </ScrollView>
-       
-
     </>
   );
 }

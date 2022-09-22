@@ -11,8 +11,8 @@ export default function TodoDetailsScreen({ navigation,route}) {
 
   const [todo,setTodo] = useState({})
 
-  const [title,setTitle] = useState('')
-  const [content,setContent] = useState('')
+  const [title,setTitle] = useState(route.params.todo.Title)
+  const [content,setContent] = useState(route.params.todo.Content)
 
   const createNewTodo =()=>{
     route.params({Title: title,Content: content,Time: day})
