@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { SearchBar, Icon } from "@rneui/themed";
 import { useState, useEffect } from 'react'
+import {DeviceEventEmitter} from "react-native"
 import TodoList from './TodoList.js'
 
 export default function TodoListScreen({ navigation }) {
@@ -58,6 +59,12 @@ export default function TodoListScreen({ navigation }) {
    
   }
 
+  const handleOnPressExit = ()=>{
+    setIsChecking(false);
+    setArrayOfChecked([]);
+    setIsSelectAll([])
+  }
+
   const includeChecked = (id) => arrayOfChecked.includes(id)
 
   const addNewTodo = (newTodo) => {
@@ -72,13 +79,13 @@ export default function TodoListScreen({ navigation }) {
       <View >
         <SearchBar platform="android" ref={search => setSearchInput(search)} value={searchInput} style={styles.searchInput} placeholder="Tìm kiếm ghi chú" />
       </View>
-      <View style={styles.IconAdd}><Icon onPress={() => { navigation.navigate('CreateNewTodo', addNewTodo) }} size={30} reverse color='#36f20c' name="plus" type="feather" /></View>
+      <TouchableOpacity style={styles.IconAdd} onPress={() => { navigation.navigate('CreateNewTodo', {addNewTodo:addNewTodo}) }}><Icon  size={30} reverse color='#36f20c' name="plus" type="feather" /></TouchableOpacity>
       <TodoList ListTodo={ListTodo} key={ListTodo} openTodoDetails={(todo) => { navigation.navigate('TodoDetails', { todo }) }} isChecking={isChecking} openChecking={() => { setIsChecking(true) }}
         handleOnPessChecked={(id) => { handleOnPessChecked(id) }} includeChecked={(id) => includeChecked(id)}
       />
       {!isChecking ? '' :
         <View style={styles.footChecking} >
-          <TouchableOpacity style={styles.iconChecking} onPress={() => { setIsChecking(false) }}>
+          <TouchableOpacity style={styles.iconChecking} onPress={handleOnPressExit}>
             <Icon name='x' type="feather" />
             <Text style={styles.tileChecking} >Thoát</Text>
           </TouchableOpacity>

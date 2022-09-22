@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './src/Login/LoginScreen.js'
 import CreateNewTodo from './src/TodoDetails/CreateNewTodo.js'
 import TodoDetails from './src/TodoDetails/TodoDetails.js'
+import Register from './src/Login/Register.js';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Stack.Screen name="ListTodo" component={ListTodo} />
         <Stack.Screen name="CreateNewTodo" component={CreateNewTodo} />
         <Stack.Screen name="TodoDetails" component={TodoDetails} />
+        <Stack.Screen name="Register" component={Register} />
       </Stack.Navigator>
     </NavigationContainer>
   );

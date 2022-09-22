@@ -2,8 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { Input, Icon ,Button} from '@rneui/themed';
 import { SafeAreaView, TextInput } from "react-native";
+import {DeviceEventEmitter} from "react-native"
 import {useState} from "react"
 import * as React from 'react';
+
 export default function TodoDetailsScreen({ navigation,route}) {
 
   const d = new Date();
@@ -14,8 +16,12 @@ export default function TodoDetailsScreen({ navigation,route}) {
   const [title,setTitle] = useState('')
   const [content,setContent] = useState('')
 
+  DeviceEventEmitter.addListener("event.createNewTodo", (eventData) => 
+  callbackYouWantedToPass(eventData));
+
   const createNewTodo =()=>{
-    route.params({Title: title,Content: content,Time: day})
+    route.params.addNewTodo({Title: title,Content: content,Time: day})
+    console.log(route.params.addNewTodo)
   }
 
   React.useLayoutEffect(() => {

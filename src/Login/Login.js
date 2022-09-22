@@ -1,11 +1,29 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput ,Alert} from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 import { Button, Icon } from "@rneui/themed";
 import { color } from "@rneui/themed/dist/config";
 
 
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+
+
 export default function Index(props) {
     const [hidePass, setHidePass] = useState(true);
+
+    const [email,setEmail] = useState('');
+    const [password,setPassword] =useState('')
+
+    const handleLogin = ()=>{
+        const auth = getAuth();
+        signInWithEmailAndPassword(auth, email, password)
+          .then(props.login)
+          .catch((error) => {
+            Alert.alert("sai bets")
+            const errorCode = error.code;
+            const errorMessage = error.message;
+          });
+    }
 
     return (
         <View style={styles.container}>
@@ -14,7 +32,7 @@ export default function Index(props) {
                 <View style={styles.container_input}>
                     <View style={styles.box_input}>
                         <Icon style={styles.icon} name="person" color="#0089e3" />
-                        <TextInput style={styles.input_value} placeholder="User name" />
+                        <TextInput style={styles.input_value} name="email" placeholder="Email" onChangeText={text=>setEmail(text)} value={email} />
                     </View>
 
                     <View style={styles.box_input}>
@@ -24,7 +42,9 @@ export default function Index(props) {
                             <Icon style={styles.icon} name="lock" color="#0089e3" />
                             <TextInput style={styles.input_value_ps} placeholder="Password"
                                 autoCompleteType="password"
-                                secureTextEntry={hidePass ? true : false} />
+                                secureTextEntry={hidePass ? true : false}
+                                onChangeText={text=>setPassword(text)} value={password}
+                                />
 
                             <Icon style={{ marginTop: 25 }} name={hidePass ? 'eye-slash' : 'eye'}
                                 type="font-awesome-5"
@@ -44,7 +64,7 @@ export default function Index(props) {
                             loading={false}
                             loadingProps={{ size: "small", color: "white" }}
                             buttonStyle={{
-                                backgroundColor: "#019386",
+                                backgroundColor: "#54dd76",
                                 borderRadius: 10
                             }}
                             titleStyle={{ fontWeight: "bold", fontSize: 23 }}
@@ -54,7 +74,7 @@ export default function Index(props) {
                                 width: 340,
                                 marginVertical: 10,
                             }}
-                            onPress={props.login}
+                            onPress={handleLogin}
                         />
 
                         <Button
@@ -62,7 +82,7 @@ export default function Index(props) {
                             loading={false}
                             loadingProps={{ size: "small", color: "white" }}
                             buttonStyle={{
-                                backgroundColor: "#019386",
+                                backgroundColor: "#54dd76",
                                 borderRadius: 10,
                             }}
                             titleStyle={{ fontWeight: "bold", fontSize: 23 }}
@@ -72,7 +92,7 @@ export default function Index(props) {
                                 width: 340,
                                 marginVertical: 10,
                             }}
-                        // onPress={() =>
+                        onPress={() =>props.register()}
                         />
                     </View>
 
@@ -87,7 +107,6 @@ export default function Index(props) {
                         </View>
                     </View>
                 </View>
-
             </View>
         </View>
     );
@@ -95,7 +114,7 @@ export default function Index(props) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#019386",
+        backgroundColor: "#54dd76",
         height: "100%",
         display: "flex",
         justifyContent: "flex-end",

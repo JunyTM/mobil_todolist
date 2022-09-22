@@ -6,7 +6,7 @@ import Login from './Login.js'
 export default function LoginScreen({navigation}) {
   return (
     <View>
-        <Login login={()=>navigation.navigate('ListTodo')} />
+        <Login login={()=>navigation.navigate('ListTodo')}  register={()=>navigation.push('Register')}/>
     </View>
   );
 }
