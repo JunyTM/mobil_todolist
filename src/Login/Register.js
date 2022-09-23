@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput ,Alert} from "react-native";
 import { CheckBox, Button } from "@rneui/themed";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import {auth} from "../Firebase/FirebaseConfig.js"
+import { getAuth, createUserWithEmailAndPassword ,updateProfile} from "firebase/auth";
 
 export default function Register() {
     const [check1, setCheck1] = useState(false);
@@ -13,16 +12,57 @@ export default function Register() {
     const [password,setPassword] = useState('')
     const [passwordConfirmation,setPasswordConfirmation] = useState('')
 
+    const isFillForm =()=>{
+        if(!firstName||!lastName||!email||!password||!passwordConfirmation){
+            return "Vui lòng điền đầy đủ thông tin !"
+        }
+        return false
+    }
+
+    const isPasswordConfirmation =()=>{
+        if(password!=passwordConfirmation){
+            return "Mật khẩu nhập lại chưa đúng !"
+        }
+        return false
+    }
+
+    
+    const handleValidForm = ()=>{
+        if(isFillForm()){
+            Alert.alert(isFillForm())
+        }
+        else if(isPasswordConfirmation()){
+            Alert.alert(isPasswordConfirmation())
+        }
+        else {
+            handleRegister();
+        }
+    }
    
     const handleRegister =()=>{
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
-          .then(
-            Alert.alert("ok em")
+          .then((userCredential) => {
+            updateProfile(userCredential.user, {
+                displayName: firstName+" "+lastName,
+              }).then(() => {
+                Alert.alert("Tạo tài khoản thành công !")
+              }).catch((error) => {
+               console.log(error)
+              });
+          }
           )
           .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+
+            if(errorCode=='auth/weak-password'){
+                Alert.alert("Mật khẩu phải có ít nhất 6 kí tự !")
+            }
+            else if(errorCode=='auth/invalid-email'){
+                Alert.alert("Không đúng định dạng email !")
+            }
+            else if(errorCode=='auth/email-already-in-use'){
+                Alert.alert("Email này đã được sử dụng !")
+            }
             // ..
           });
     }
@@ -37,6 +77,7 @@ export default function Register() {
                             Please fill in this form to create an account!
                         </Text>
                     </View>
+                    
                     <View style={styles.box_form1}>
                         <TextInput style={styles.value_input1} name='FirstName' placeholder="First Name" 
                         selectionColor="#000" onChangeText={(text)=>setFirstName(text)} value={firstName}/>
@@ -80,14 +121,11 @@ export default function Register() {
                                 width: 200,
                                 marginVertical: 10,
                             }}
-                           onPress={()=>handleRegister()}
+                           onPress={()=>handleValidForm()}
                         />
-                        
                     </View>
                 </View>
-
             </View>
-
         </View>
     );
 }

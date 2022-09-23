@@ -2,30 +2,62 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { SearchBar, Icon } from "@rneui/themed";
 import { useState, useEffect } from 'react'
-import {DeviceEventEmitter} from "react-native"
+import { DeviceEventEmitter } from "react-native"
 import TodoList from './TodoList.js'
 
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref, onValue} from "firebase/database";
+
+
+
 export default function TodoListScreen({ navigation }) {
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const UID = user.uid;
 
   const [searchInput, setSearchInput] = useState('')
   const d = new Date();
   const day = d.getDate() + " tháng " + (d.getMonth() + 1) + " , " + d.getFullYear();
-  const [ListTodo, setListTodo] = useState([{ Title: "Hôm nay ăn gì", Content: "Ăn cứt", Time: day }, { Title: "Danh sách nợ", Content: "Đéo có ai", Time: day }
-    , { Title: "Danh sách người yêu cũ", Content: "Cũng đéo có aiasdfas fasdfas dfasfasfawefa sdfwae fastfa wefasdfwaerf ăfa", Time: day }, { Title: "Công thức tán gái", Content: "ajsdgjashdgajshgdhjas ko có", Time: day },
-  { Title: "Danh sách trượt môn", Content: "Tất cả", Time: day }]);
+  const [ListTodo ,setListTodo] = useState([])
 
   const [isChecking, setIsChecking] = useState(false)
 
   const [arrayOfChecked, setArrayOfChecked] = useState([])
 
-  const [isSelectAll,setIsSelectAll] = useState(false)
+  const [isSelectAll, setIsSelectAll] = useState(false)
+
+  const db = getDatabase();
+  const getData = ref(db,'/todoList/'+ UID );
+
+ 
+ const handlefetchData = ()=>{
+  
+  onValue(getData, (snapshot) => {
+    let data=[]
+    snapshot.forEach((childSnap)=>{
+      let childData = childSnap.val();
+      data.push(
+        {
+          Id:childSnap.key,
+          Title:childData.Title,
+          Content: childData.Content,
+          Time:childData.Time
+        }
+      )
+    }
+   )
+  setListTodo([...data])
+ })
+
+}
 
   const handleOnPessChecked = (id) => {
     if (arrayOfChecked.includes(id)) {
       let newArr = arrayOfChecked.filter((value, key) => {
         return value != id
       })
-      setArrayOfChecked(newArr?newArr:[])
+      setArrayOfChecked(newArr ? newArr : [])
     }
     else {
       let newArr = [id, ...arrayOfChecked]
@@ -35,31 +67,30 @@ export default function TodoListScreen({ navigation }) {
     console.log(arrayOfChecked)
   }
 
-  const handleOnPressDelete = ()=>{
-     let newTodo = ListTodo.filter((value, key)=>{
-        return !arrayOfChecked.includes(value.Title+key)
-      })
-
-      setListTodo(newTodo)
+  const handleOnPressDelete = () => {
+    let newTodo = ListTodo.filter((value, key) => {
+      return !arrayOfChecked.includes(value.Title + key)
+    })
+    setListTodo(newTodo)
 
   }
 
-  const handleOnPressSelectAll =()=>{
-    if(isSelectAll){
+  const handleOnPressSelectAll = () => {
+    if (isSelectAll) {
       setArrayOfChecked([])
       setIsSelectAll(!isSelectAll)
     }
-    else{
-      let newIsChecking=[]
-      ListTodo.forEach((value, key)=>newIsChecking.push(value.Title+key))
+    else {
+      let newIsChecking = []
+      ListTodo.forEach((value, key) => newIsChecking.push(value.Id))
       setArrayOfChecked([...newIsChecking])
       setIsSelectAll(!isSelectAll)
-    
+
     }
-   
+
   }
 
-  const handleOnPressExit = ()=>{
+  const handleOnPressExit = () => {
     setIsChecking(false);
     setArrayOfChecked([]);
     setIsSelectAll([])
@@ -67,19 +98,13 @@ export default function TodoListScreen({ navigation }) {
 
   const includeChecked = (id) => arrayOfChecked.includes(id)
 
-  const addNewTodo = (newTodo) => {
-    let newListTodo = [newTodo, ...ListTodo];
-    setListTodo(newListTodo);
-    console.log(newListTodo);
-  }
-
-
+  useEffect(handlefetchData,[])
   return (
     <View style={styles.container}>
       <View >
-        <SearchBar platform="android" ref={search => setSearchInput(search)} value={searchInput} style={styles.searchInput} placeholder="Tìm kiếm ghi chú" />
+        <SearchBar platform="android" ref={search => setSearchInput(search)} value={searchInput} style={styles.searchInput} placeholder={"Tìm kiếm ghi chú "} />
       </View>
-      <TouchableOpacity style={styles.IconAdd} onPress={() => { navigation.navigate('CreateNewTodo', {addNewTodo:addNewTodo}) }}><Icon  size={30} reverse color='#36f20c' name="plus" type="feather" /></TouchableOpacity>
+      <TouchableOpacity style={styles.IconAdd} onPress={() => { navigation.navigate('CreateNewTodo') }}><Icon size={30} reverse color='#36f20c' name="plus" type="feather" /></TouchableOpacity>
       <TodoList ListTodo={ListTodo} key={ListTodo} openTodoDetails={(todo) => { navigation.navigate('TodoDetails', { todo }) }} isChecking={isChecking} openChecking={() => { setIsChecking(true) }}
         handleOnPessChecked={(id) => { handleOnPessChecked(id) }} includeChecked={(id) => includeChecked(id)}
       />

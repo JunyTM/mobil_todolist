@@ -5,24 +5,60 @@ import { SafeAreaView, TextInput } from "react-native";
 import {DeviceEventEmitter} from "react-native"
 import {useState} from "react"
 import * as React from 'react';
+import { getDatabase, ref, child, push, update ,set} from "firebase/database";
+import { getAuth } from "firebase/auth";
 
-export default function TodoDetailsScreen({ navigation,route}) {
+export default function TodoDetailsScreen({ navigation}) {
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const UID = user.uid;
+
+
+  const [isNewTodo,setIsNewTodo] = useState(true)
+  const [key,setKey] = useState('')
+
 
   const d = new Date();
   const day = d.getDate() + " tháng " + (d.getMonth() + 1) + " , " + d.getFullYear();
 
-  const [todo,setTodo] = useState({})
-
   const [title,setTitle] = useState('')
   const [content,setContent] = useState('')
 
-  DeviceEventEmitter.addListener("event.createNewTodo", (eventData) => 
-  callbackYouWantedToPass(eventData));
-
   const createNewTodo =()=>{
-    route.params.addNewTodo({Title: title,Content: content,Time: day})
-    console.log(route.params.addNewTodo)
+    if(isNewTodo){
+      const db = getDatabase();
+      const postData = {
+        Title: title,
+        Content: content,
+        Time: day 
+      };
+    
+      const newPostKey = push(child(ref(db), '/todoList/')).key;
+      setKey(newPostKey);
+      setIsNewTodo(false)
+      const updates = {};
+      updates['/todoList/'+ UID + '/' + newPostKey] = postData;
+     
+      return update(ref(db), updates);
+    }
+
+    else{
+      updateTodo()
+    }
+
+  
   }
+
+  const updateTodo = ()=>{
+    const db = getDatabase();
+   set(ref(db, '/todoList/'+ UID + '/' + key), {
+    title: title,
+    Content: content,Time: day 
+  });
+  }
+
+
 
   React.useLayoutEffect(() => {
     navigation.setOptions({

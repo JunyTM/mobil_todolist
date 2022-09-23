@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput ,Alert} from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 import { Button, Icon } from "@rneui/themed";
 import { color } from "@rneui/themed/dist/config";
-
+import {auth} from '../Firebase/FirebaseConfig.js'
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
@@ -17,11 +17,19 @@ export default function Index(props) {
     const handleLogin = ()=>{
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
-          .then(props.login)
+          .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            console.log("this is login:")
+            console.log(user);
+            props.login()
+            // ...
+          })
           .catch((error) => {
             Alert.alert("sai bets")
             const errorCode = error.code;
             const errorMessage = error.message;
+            console.log(error.message)
           });
     }
 
