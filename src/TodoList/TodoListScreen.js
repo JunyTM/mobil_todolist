@@ -6,7 +6,7 @@ import { DeviceEventEmitter } from "react-native"
 import TodoList from './TodoList.js'
 
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, onValue} from "firebase/database";
+import { getDatabase, ref, onValue,update } from "firebase/database";
 
 
 
@@ -16,10 +16,11 @@ export default function TodoListScreen({ navigation }) {
   const user = auth.currentUser;
   const UID = user.uid;
 
+  const [state,setState] = useState(true)
   const [searchInput, setSearchInput] = useState('')
   const d = new Date();
   const day = d.getDate() + " tháng " + (d.getMonth() + 1) + " , " + d.getFullYear();
-  const [ListTodo ,setListTodo] = useState([])
+  const [ListTodo, setListTodo] = useState([])
 
   const [isChecking, setIsChecking] = useState(false)
 
@@ -28,29 +29,29 @@ export default function TodoListScreen({ navigation }) {
   const [isSelectAll, setIsSelectAll] = useState(false)
 
   const db = getDatabase();
-  const getData = ref(db,'/todoList/'+ UID );
+  const getData = ref(db, '/todoList/' + UID);
 
- 
- const handlefetchData = ()=>{
-  
-  onValue(getData, (snapshot) => {
-    let data=[]
-    snapshot.forEach((childSnap)=>{
-      let childData = childSnap.val();
-      data.push(
-        {
-          Id:childSnap.key,
-          Title:childData.Title,
-          Content: childData.Content,
-          Time:childData.Time
-        }
+
+  const handlefetchData = () => {
+
+    onValue(getData, (snapshot) => {
+      let data = []
+      snapshot.forEach((childSnap) => {
+        let childData = childSnap.val();
+        data.push(
+          {
+            Id: childSnap.key,
+            Title: childData.Title,
+            Content: childData.Content,
+            Time: childData.Time
+          }
+        )
+      }
       )
-    }
-   )
-  setListTodo([...data])
- })
+      setListTodo([...data])
+    })
 
-}
+  }
 
   const handleOnPessChecked = (id) => {
     if (arrayOfChecked.includes(id)) {
@@ -68,11 +69,13 @@ export default function TodoListScreen({ navigation }) {
   }
 
   const handleOnPressDelete = () => {
-    let newTodo = ListTodo.filter((value, key) => {
-      return !arrayOfChecked.includes(value.Title + key)
-    })
-    setListTodo(newTodo)
-
+    arrayOfChecked.forEach((value, key) =>{
+    const updates = {};
+    updates['/todoList/'+ UID +'/'+ value  ] = null;
+    update(ref(db), updates)
+    }
+    )
+   
   }
 
   const handleOnPressSelectAll = () => {
@@ -95,19 +98,23 @@ export default function TodoListScreen({ navigation }) {
     setArrayOfChecked([]);
     setIsSelectAll([])
   }
+  
+  
 
   const includeChecked = (id) => arrayOfChecked.includes(id)
 
-  useEffect(handlefetchData,[])
+  useEffect(handlefetchData, [])
+  useEffect(()=>setState(!state), [ListTodo])
+
   return (
     <View style={styles.container}>
       <View >
         <SearchBar platform="android" ref={search => setSearchInput(search)} value={searchInput} style={styles.searchInput} placeholder={"Tìm kiếm ghi chú "} />
       </View>
       <TouchableOpacity style={styles.IconAdd} onPress={() => { navigation.navigate('CreateNewTodo') }}><Icon size={30} reverse color='#36f20c' name="plus" type="feather" /></TouchableOpacity>
-      <TodoList ListTodo={ListTodo} key={ListTodo} openTodoDetails={(todo) => { navigation.navigate('TodoDetails', { todo }) }} isChecking={isChecking} openChecking={() => { setIsChecking(true) }}
-        handleOnPessChecked={(id) => { handleOnPessChecked(id) }} includeChecked={(id) => includeChecked(id)}
-      />
+      <TodoList ListTodo={ListTodo} key={state} openTodoDetails={(todo) => { navigation.navigate('TodoDetails', { todo }) }} isChecking={isChecking} openChecking={() => { setIsChecking(true) }}
+  handleOnPessChecked={(id) => { handleOnPessChecked(id) }} includeChecked={(id) => includeChecked(id)}
+/>
       {!isChecking ? '' :
         <View style={styles.footChecking} >
           <TouchableOpacity style={styles.iconChecking} onPress={handleOnPressExit}>

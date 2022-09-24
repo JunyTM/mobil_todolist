@@ -4,15 +4,21 @@ import { Input, Icon ,Button} from '@rneui/themed';
 import { SafeAreaView, TextInput } from "react-native";
 import {useState} from "react"
 import * as React from 'react';
+import { getDatabase, ref, child, push, update ,set} from "firebase/database";
+import { getAuth } from "firebase/auth";
+
 export default function TodoDetailsScreen({ navigation,route}) {
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const UID = user.uid;
 
   const d = new Date();
   const day = d.getDate() + " tháng " + (d.getMonth() + 1) + " , " + d.getFullYear();
 
-  const [todo,setTodo] = useState({})
-
   const [title,setTitle] = useState(route.params.todo.Title)
   const [content,setContent] = useState(route.params.todo.Content)
+  const [key,setKey] = useState(route.params.todo.Id)
 
   const createNewTodo =()=>{
     route.params({Title: title,Content: content,Time: day})
@@ -21,12 +27,18 @@ export default function TodoDetailsScreen({ navigation,route}) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Icon style={{padding:10}} name='check' type='feather' onPress={()=>createNewTodo()}  title="Update count" />
+        <Icon style={{padding:10}} name='check' type='feather' onPress={()=>updateTodo()}  title="Update count" />
       ),
     });
   }, [navigation, createNewTodo]);
 
- 
+  const updateTodo = ()=>{
+    const db = getDatabase();
+   set(ref(db, '/todoList/'+ UID + '/' + key), {
+    Title: title,
+    Content: content,Time: day 
+  });
+  }
 
   return (
     <View style={styles.container}>

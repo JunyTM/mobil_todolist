@@ -20,8 +20,6 @@ export default function Index(props) {
           .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
-            console.log("this is login:")
-            console.log(user);
             props.login()
             // ...
           })

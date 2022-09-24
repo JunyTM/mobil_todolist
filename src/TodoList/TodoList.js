@@ -33,7 +33,7 @@ export default function ListTodo(props) {
     <>
       <ScrollView style={styles.container}>
         <View style={styles.row}>
-          {listTodo.map((value, key) => {
+          {listTodo.map((value) => {
             return <Todo style={styles.todo} todo={value} key={value.Id} i={value.Id} isChecking={props.isChecking}
               openChecking={() => props.openChecking()} openTodoDetails={() => props.openTodoDetails(value)}
               handleOnPessChecked={(id) => { props.handleOnPessChecked(id) }} includeChecked={(id) => props.includeChecked(id)}

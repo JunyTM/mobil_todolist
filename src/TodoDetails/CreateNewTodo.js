@@ -53,8 +53,9 @@ export default function TodoDetailsScreen({ navigation}) {
   const updateTodo = ()=>{
     const db = getDatabase();
    set(ref(db, '/todoList/'+ UID + '/' + key), {
-    title: title,
-    Content: content,Time: day 
+    Title: title,
+    Content: content,
+    Time: day 
   });
   }
 
