@@ -71,17 +71,17 @@ export default function Register() {
         <View style={styles.container}>
             <View>
                 <View>
-                    <View style={{ justifyContent: 'flex-start' }}>
-                        <Text style={{ color: '#000', fontSize: 30 }}>Wellcome SignUp</Text>
+                    <View style={{ justifyContent: 'flex-start'  }}>
+                        <Text style={{ color: '#000', fontSize: 30 ,textAlign: 'center' ,fontWeight: 'bold' }}>Đăng kí tài khoản mới</Text>
                         <Text style={{ color: '#000', fontSize: 15, paddingBottom: 10, borderBottomWidth: 1, borderStyle: 'solid', borderBottomColor: '#ccc' }}>
-                            Please fill in this form to create an account!
+                        Vui lòng điền đầy đủ thông tin dưới đây để tạo tài khoản !
                         </Text>
                     </View>
                     
                     <View style={styles.box_form1}>
-                        <TextInput style={styles.value_input1} name='FirstName' placeholder="First Name" 
+                        <TextInput style={styles.value_input1} name='FirstName' placeholder="Họ và tên đệm" 
                         selectionColor="#000" onChangeText={(text)=>setFirstName(text)} value={firstName}/>
-                        <TextInput style={styles.value_input1} name='LastName' placeholder="Last Name" 
+                        <TextInput style={styles.value_input1} name='LastName' placeholder="Tên" 
                         selectionColor="#000" onChangeText={(text)=>setLastName(text)} value={lastName}/>
                     </View>
 
@@ -93,13 +93,13 @@ export default function Register() {
                            
                         />
                         <TextInput style={styles.value_input2} secureTextEntry={true} name='password' 
-                        placeholder="Password" selectionColor="#000" onChangeText={(text)=>setPassword(text)} value={password}/>
-                        <TextInput style={styles.value_input2} secureTextEntry={true} name='confirm_password' 
-                        placeholder="Confirm Password" selectionColor="#000" onChangeText={(text)=>setPasswordConfirmation(text)} value={passwordConfirmation}/>
+                        placeholder="Mật khẩu" selectionColor="#000" onChangeText={(text)=>setPassword(text)} value={password}/>
+                        <TextInput style={styles.value_input2} secureTextEntry={true} name='confirmPassword' 
+                        placeholder="Nhập lại mật khẩu" selectionColor="#000" onChangeText={(text)=>setPasswordConfirmation(text)} value={passwordConfirmation}/>
                     </View>
-                    <View style={styles.checkboxContainer}>
-                        <CheckBox
-                            title="I accept the Terms of Use & Privacy Policy."
+                    <View >
+                        <CheckBox 
+                            title="Tôi chấp nhận Điều khoản Sử dụng & Chính sách Bảo mật"
                             checked={check1}
                             onPress={() => setCheck1(!check1)}
                         />
@@ -107,7 +107,7 @@ export default function Register() {
                     <View style={{ alignItems: 'center' }}>
                         <Button
                             disabled={!check1}
-                            title="Sign up"
+                            title="Tạo tài khoản"
                             loading={false}
                             loadingProps={{ size: "small", color: "white" }}
                             buttonStyle={{
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2f2f2',
         borderStyle: 'solid',
         width: 150, height: 40,
-        borderRadius: 5,
+        borderRadius: 10,
         paddingLeft: 5,
         marginLeft: 17
     },
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2f2f2',
         borderStyle: 'solid',
         width: '90%', height: 40,
-        borderRadius: 5,
+        borderRadius: 10,
         paddingLeft: 5,
         margin: 15,
     },

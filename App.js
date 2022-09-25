@@ -12,18 +12,17 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} headerLargeTitle={false} />
-        <Stack.Screen name="ListTodo" component={ListTodo} />
-        <Stack.Screen name="CreateNewTodo" component={CreateNewTodo} />
-        <Stack.Screen name="TodoDetails" component={TodoDetails} />
-        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Login" component={LoginScreen} headerLargeTitle={false} options={{ title: 'Đăng nhập' }}/>
+        <Stack.Screen name="ListTodo" component={ListTodo}   options={({ route }) => ({ title: route.params.name,headerBackVisible:false ,headerTitleAlign: 'center' })} />
+        <Stack.Screen name="CreateNewTodo" component={CreateNewTodo} options={{ title: '' }}/>
+        <Stack.Screen name="TodoDetails" component={TodoDetails} options={{ title: '' }}/>
+        <Stack.Screen name="Register" component={Register} options={{ title: 'Tạo tài khoản' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 const Stack = createNativeStackNavigator();
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

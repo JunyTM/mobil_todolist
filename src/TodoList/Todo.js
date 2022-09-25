@@ -49,7 +49,6 @@ export default function Todo(props) {
   })
 
   return (
-
     <TouchableOpacity style={styles.todo} children={false}
       onLongPress={() => { if (!props.isChecking) { Vibration.vibrate(30); props.openChecking(); } }}
       onPress={props.isChecking ? () => { props.handleOnPessChecked(props.i); Vibration.vibrate(15) } : () => props.openTodoDetails()} >

@@ -20,11 +20,11 @@ export default function Index(props) {
           .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
-            props.login()
+            props.login(user.displayName)
             // ...
           })
           .catch((error) => {
-            Alert.alert("sai bets")
+            Alert.alert("Sai tài khoản hoặc mật khẩu")
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(error.message)
@@ -46,7 +46,7 @@ export default function Index(props) {
                             flexDirection: 'row'
                         }}>
                             <Icon style={styles.icon} name="lock" color="#0089e3" />
-                            <TextInput style={styles.input_value_ps} placeholder="Password"
+                            <TextInput style={styles.input_value_ps} placeholder="Mật khẩu"
                                 autoCompleteType="password"
                                 secureTextEntry={hidePass ? true : false}
                                 onChangeText={text=>setPassword(text)} value={password}
@@ -66,7 +66,7 @@ export default function Index(props) {
 
                     <View style={{ marginTop: 20 }}>
                         <Button
-                            title="Log in"
+                            title="Đăng nhập"
                             loading={false}
                             loadingProps={{ size: "small", color: "white" }}
                             buttonStyle={{
@@ -84,7 +84,7 @@ export default function Index(props) {
                         />
 
                         <Button
-                            title="Sign up"
+                            title="Tạo tài khoản"
                             loading={false}
                             loadingProps={{ size: "small", color: "white" }}
                             buttonStyle={{
@@ -104,7 +104,7 @@ export default function Index(props) {
 
                     <View >
                         <View>
-                            <Text style={{ textAlign: 'center', paddingTop: 10 }}>Or Sign Up Using</Text>
+                            <Text style={{ textAlign: 'center', paddingTop: 10 }}>Hoặc đăng nhập bằng</Text>
                         </View>
                         <View style={styles.icon_ftg} >
                             <Icon style={styles.icon_ftg} name="facebook" type="font-awesome-5" size={40} color='#3f5993' />

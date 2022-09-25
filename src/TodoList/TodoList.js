@@ -40,6 +40,7 @@ export default function ListTodo(props) {
             />
           })}
         </View>
+        <View style={{height: 100}}></View>
       </ScrollView>
     </>
   );

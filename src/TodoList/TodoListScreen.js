@@ -17,10 +17,11 @@ export default function TodoListScreen({ navigation }) {
   const UID = user.uid;
 
   const [state,setState] = useState(true)
-  const [searchInput, setSearchInput] = useState('')
+  const [searchInput, setSearchInput] = useState("")
   const d = new Date();
   const day = d.getDate() + " tháng " + (d.getMonth() + 1) + " , " + d.getFullYear();
   const [ListTodo, setListTodo] = useState([])
+  const [ListTodoOfSearch,setListTodoOfSearch] = useState([])
 
   const [isChecking, setIsChecking] = useState(false)
 
@@ -31,7 +32,14 @@ export default function TodoListScreen({ navigation }) {
   const db = getDatabase();
   const getData = ref(db, '/todoList/' + UID);
 
-
+  const handleInputSearchChange =(e)=>{
+     const newListTodo =ListTodo.filter(Value =>{
+        return Value.Title.includes(e) || Value.Content.includes(e)
+      })
+      setState(!state)
+      setSearchInput(e)
+      setListTodoOfSearch(newListTodo)
+  }
   const handlefetchData = () => {
 
     onValue(getData, (snapshot) => {
@@ -53,6 +61,15 @@ export default function TodoListScreen({ navigation }) {
 
   }
 
+  const updateListTodoOfSearchWhenDelete = () => {
+    const newListTodo = ListTodoOfSearch.filter(valueTodo=>{
+      return !arrayOfChecked.includes(valueTodo.Id)
+    })
+    setState(!state)
+    setListTodoOfSearch(newListTodo)
+  }
+
+
   const handleOnPessChecked = (id) => {
     if (arrayOfChecked.includes(id)) {
       let newArr = arrayOfChecked.filter((value, key) => {
@@ -64,8 +81,6 @@ export default function TodoListScreen({ navigation }) {
       let newArr = [id, ...arrayOfChecked]
       setArrayOfChecked(newArr)
     }
-
-    console.log(arrayOfChecked)
   }
 
   const handleOnPressDelete = () => {
@@ -75,7 +90,10 @@ export default function TodoListScreen({ navigation }) {
     update(ref(db), updates)
     }
     )
-   
+    if(searchInput.length){
+      updateListTodoOfSearchWhenDelete()
+    }
+    handleOnPressExit()
   }
 
   const handleOnPressSelectAll = () => {
@@ -106,25 +124,64 @@ export default function TodoListScreen({ navigation }) {
   useEffect(handlefetchData, [])
   useEffect(()=>setState(!state), [ListTodo])
 
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: "#f2f2f2",
+      height: "100%",
+      display: "flex",
+    },
+    IconAdd: {
+      position: 'absolute',
+      bottom: 40,
+      right: 20,
+      size: 30,
+      zIndex: 1
+    },
+    footChecking: {
+      position: 'absolute',
+      backgroundColor: '#e5ffff',
+      bottom: 0,
+      width: '100%',
+      height: 50,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      textAlign: "center",
+    },
+    iconChecking: {
+      padding: 5,
+      width: '33%',
+      textAlign: 'center',
+    },
+    tileChecking: {
+      textAlign: 'center',
+      fontSize: 12
+    },
+    titleDelete: {
+      textAlign: 'center',
+      fontSize: 12,
+      color:arrayOfChecked.length?'black':'#d3d3d3'
+    }
+  });
+
   return (
     <View style={styles.container}>
       <View >
-        <SearchBar platform="android" ref={search => setSearchInput(search)} value={searchInput} style={styles.searchInput} placeholder={"Tìm kiếm ghi chú "} />
+        <SearchBar platform="android" onChangeText={search => {handleInputSearchChange(search)}} value={searchInput} style={styles.searchInput} placeholder={"Tìm kiếm ghi chú "} />
       </View>
       <TouchableOpacity style={styles.IconAdd} onPress={() => { navigation.navigate('CreateNewTodo') }}><Icon size={30} reverse color='#36f20c' name="plus" type="feather" /></TouchableOpacity>
-      <TodoList ListTodo={ListTodo} key={state} openTodoDetails={(todo) => { navigation.navigate('TodoDetails', { todo }) }} isChecking={isChecking} openChecking={() => { setIsChecking(true) }}
+      <TodoList ListTodo={searchInput.length?ListTodoOfSearch:ListTodo} key={state} openTodoDetails={(todo) => { navigation.navigate('TodoDetails', { todo }) }} isChecking={isChecking} openChecking={() => { setIsChecking(true) }}
   handleOnPessChecked={(id) => { handleOnPessChecked(id) }} includeChecked={(id) => includeChecked(id)}
 />
       {!isChecking ? '' :
         <View style={styles.footChecking} >
-          <TouchableOpacity style={styles.iconChecking} onPress={handleOnPressExit}>
+          <TouchableOpacity  style={styles.iconChecking} onPress={handleOnPressExit}>
             <Icon name='x' type="feather" />
             <Text style={styles.tileChecking} >Thoát</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.iconChecking} onPress={handleOnPressDelete}>
-            <Icon name='trash-2' type="feather" />
-            <Text style={styles.tileChecking}>Xóa</Text>
+          <TouchableOpacity style={styles.iconChecking} onPress={handleOnPressDelete} activeOpacity={arrayOfChecked.length?0.2:1}>
+            <Icon name='trash-2' type="feather" color={arrayOfChecked.length?'black':'#d3d3d3'}/>
+            <Text style={styles.titleDelete} >Xóa</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.iconChecking} onPress={handleOnPressSelectAll}>
@@ -138,37 +195,5 @@ export default function TodoListScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#f2f2f2",
-    height: "100%",
-    display: "flex",
-  },
-  IconAdd: {
-    position: 'absolute',
-    bottom: 40,
-    right: 20,
-    size: 30,
-    zIndex: 1
-  },
-  footChecking: {
-    position: 'absolute',
-    backgroundColor: '#e5ffff',
-    bottom: 0,
-    width: '100%',
-    height: 50,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    textAlign: "center",
-  },
-  iconChecking: {
-    padding: 5,
-    width: '33%',
-    textAlign: 'center',
-  },
-  tileChecking: {
-    textAlign: 'center',
-    fontSize: 12
-  }
-});
+
 
