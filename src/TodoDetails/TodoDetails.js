@@ -19,31 +19,44 @@ export default function TodoDetailsScreen({ navigation,route}) {
   const [title,setTitle] = useState(route.params.todo.Title)
   const [content,setContent] = useState(route.params.todo.Content)
   const [key,setKey] = useState(route.params.todo.Id)
+  const [isSave,setIsSave] = useState(false)
 
   const createNewTodo =()=>{
-    route.params({Title: title,Content: content,Time: day})
+    
+  }
+
+  
+  const isValidTodo = ()=>{
+    if((title||content)&&!isSave){
+      return true
+    }
+    else return false
   }
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Icon style={{padding:10}} name='check' type='feather' onPress={()=>updateTodo()}  title="Update count" />
+        <Icon style={{padding:10 }} name='save' type='material' onPress={()=>updateTodo()} color={isValidTodo()?'black':'#d3d3d3'} />
       ),
     });
   }, [navigation, createNewTodo]);
 
   const updateTodo = ()=>{
+
+  if(isValidTodo()){
     const db = getDatabase();
-   set(ref(db, '/todoList/'+ UID + '/' + key), {
-    Title: title,
-    Content: content,Time: day 
-  });
+    set(ref(db, '/todoList/'+ UID + '/' + key), {
+     Title: title,
+     Content: content,Time: day 
+   });
+    setIsSave(true)
+    }
   }
 
   return (
     <View style={styles.container}>
-      <TextInput style={styles.title} placeholder="Nhập tiêu đề" onChangeText={e=>setTitle(e)} value={title} />
-      <TextInput style={styles.content} placeholder="Nội dung " onChangeText={e=>setContent(e)} value={content} multiline/>
+     <TextInput style={styles.title} placeholder="Nhập tiêu đề" onChangeText={e=>{setTitle(e);setIsSave(false)}} value={title} />
+      <TextInput style={styles.content} placeholder="Nội dung " onChangeText={e=>{setContent(e);setIsSave(false)}} value={content} multiline/>
     </View>
   );
 }

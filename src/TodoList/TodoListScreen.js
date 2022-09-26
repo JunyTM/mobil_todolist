@@ -1,8 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity,Alert } from 'react-native';
 import { SearchBar, Icon } from "@rneui/themed";
 import { useState, useEffect } from 'react'
-import { DeviceEventEmitter } from "react-native"
 import TodoList from './TodoList.js'
 
 import { getAuth } from "firebase/auth";
@@ -58,7 +56,6 @@ export default function TodoListScreen({ navigation }) {
       )
       setListTodo([...data])
     })
-
   }
 
   const updateListTodoOfSearchWhenDelete = () => {
@@ -68,7 +65,6 @@ export default function TodoListScreen({ navigation }) {
     setState(!state)
     setListTodoOfSearch(newListTodo)
   }
-
 
   const handleOnPessChecked = (id) => {
     if (arrayOfChecked.includes(id)) {
@@ -81,6 +77,19 @@ export default function TodoListScreen({ navigation }) {
       let newArr = [id, ...arrayOfChecked]
       setArrayOfChecked(newArr)
     }
+  }
+
+  const handleOpenModalDelete = () => {
+    Alert.alert(
+      "Xóa ghi chú",
+      `Bạn có chắc chắn muốn xóa ${arrayOfChecked.length} mục ghi chú ?`,
+      [
+        {
+          text: "Hủy",
+          style: "cancel"
+        },
+        { text: "Xóa", onPress: handleOnPressDelete}
+      ])
   }
 
   const handleOnPressDelete = () => {
@@ -116,8 +125,6 @@ export default function TodoListScreen({ navigation }) {
     setArrayOfChecked([]);
     setIsSelectAll([])
   }
-  
-  
 
   const includeChecked = (id) => arrayOfChecked.includes(id)
 
@@ -168,7 +175,7 @@ export default function TodoListScreen({ navigation }) {
       <View >
         <SearchBar platform="android" onChangeText={search => {handleInputSearchChange(search)}} value={searchInput} style={styles.searchInput} placeholder={"Tìm kiếm ghi chú "} />
       </View>
-      <TouchableOpacity style={styles.IconAdd} onPress={() => { navigation.navigate('CreateNewTodo') }}><Icon size={30} reverse color='#36f20c' name="plus" type="feather" /></TouchableOpacity>
+      <TouchableOpacity style={styles.IconAdd} onPress={() => { navigation.navigate('CreateNewTodo') ; handleOnPressExit()}}><Icon size={30} reverse color='#36f20c' name="plus" type="feather" /></TouchableOpacity>
       <TodoList ListTodo={searchInput.length?ListTodoOfSearch:ListTodo} key={state} openTodoDetails={(todo) => { navigation.navigate('TodoDetails', { todo }) }} isChecking={isChecking} openChecking={() => { setIsChecking(true) }}
   handleOnPessChecked={(id) => { handleOnPessChecked(id) }} includeChecked={(id) => includeChecked(id)}
 />
@@ -179,7 +186,7 @@ export default function TodoListScreen({ navigation }) {
             <Text style={styles.tileChecking} >Thoát</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.iconChecking} onPress={handleOnPressDelete} activeOpacity={arrayOfChecked.length?0.2:1}>
+          <TouchableOpacity style={styles.iconChecking} onPress={handleOpenModalDelete} activeOpacity={arrayOfChecked.length?0.2:1}>
             <Icon name='trash-2' type="feather" color={arrayOfChecked.length?'black':'#d3d3d3'}/>
             <Text style={styles.titleDelete} >Xóa</Text>
           </TouchableOpacity>
@@ -190,7 +197,6 @@ export default function TodoListScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       }
-
     </View>
   );
 }

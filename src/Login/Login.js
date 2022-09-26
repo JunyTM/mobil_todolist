@@ -24,7 +24,10 @@ export default function Index(props) {
             // ...
           })
           .catch((error) => {
-            Alert.alert("Sai tài khoản hoặc mật khẩu")
+            if(auth/network-request-failed){
+                Alert.alert("Mạng kết nối không ổn định !")
+            }
+            Alert.alert("Sai tài khoản hoặc mật khẩu !")
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(error.message)
@@ -40,7 +43,6 @@ export default function Index(props) {
                         <Icon style={styles.icon} name="person" color="#0089e3" />
                         <TextInput style={styles.input_value} name="email" placeholder="Email" onChangeText={text=>setEmail(text)} value={email} />
                     </View>
-
                     <View style={styles.box_input}>
                         <View style={{
                             flexDirection: 'row'
@@ -51,15 +53,12 @@ export default function Index(props) {
                                 secureTextEntry={hidePass ? true : false}
                                 onChangeText={text=>setPassword(text)} value={password}
                                 />
-
                             <Icon style={{ marginTop: 25 }} name={hidePass ? 'eye-slash' : 'eye'}
                                 type="font-awesome-5"
                                 size={15}
                                 color="#000"
                                 onPress={() => setHidePass(!hidePass)}
-
                             />
-
                         </View>
 
                     </View>

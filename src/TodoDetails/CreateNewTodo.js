@@ -34,7 +34,7 @@ export default function TodoDetailsScreen({ navigation}) {
   }
 
   const createNewTodo =()=>{
-    if(isValidTodo){
+    if(isValidTodo()){
     if(isNewTodo){
       const db = getDatabase();
       const postData = {
@@ -72,13 +72,12 @@ export default function TodoDetailsScreen({ navigation}) {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Icon style={{padding:10 }} name='save' type='material' onPress={()=>createNewTodo()} color={isValidTodo()?'black':'#d3d3d3'} title="Update count" />
+        <Icon style={{padding:10 }} name='save' type='material' onPress={()=>createNewTodo()} color={isValidTodo()?'black':'#d3d3d3'} />
       ),
     });
   }, [navigation, createNewTodo]);
 
  
-
   return (
     <View style={styles.container}>
       <TextInput style={styles.title} placeholder="Nhập tiêu đề" onChangeText={e=>{setTitle(e);setIsSave(false)}} value={title} />
