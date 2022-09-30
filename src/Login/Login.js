@@ -24,12 +24,16 @@ export default function Index(props) {
             // ...
           })
           .catch((error) => {
-            if(auth/network-request-failed){
-                Alert.alert("Mạng kết nối không ổn định !")
-            }
-            Alert.alert("Sai tài khoản hoặc mật khẩu !")
             const errorCode = error.code;
             const errorMessage = error.message;
+            if(errorCode=="auth/network-request-failed"){
+                Alert.alert("Mạng kết nối không ổn định !")
+            }
+            else if (errorCode=="auth/wrong-password"){
+                Alert.alert("Sai tài khoản hoặc mật khẩu !")
+            }
+          
+          
             console.log(error.message)
           });
     }

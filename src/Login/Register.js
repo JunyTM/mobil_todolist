@@ -48,19 +48,23 @@ export default function Register() {
               }).then(() => {
                 Alert.alert("Tạo tài khoản thành công !")
               }).catch((error) => {
-               console.log(error)
+                if(error){
+                    console.log(error.message)
+                }
+             
               });
           }
           )
           .catch((error) => {
-
-            if(errorCode=='auth/weak-password'){
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            if(errorCode==('auth/weak-password')){
                 Alert.alert("Mật khẩu phải có ít nhất 6 kí tự !")
             }
-            else if(errorCode=='auth/invalid-email'){
+            else if(errorCode==('auth/invalid-email')){
                 Alert.alert("Không đúng định dạng email !")
             }
-            else if(errorCode=='auth/email-already-in-use'){
+            else if(errorCode==('auth/email-already-in-use')){
                 Alert.alert("Email này đã được sử dụng !")
             }
             // ..
